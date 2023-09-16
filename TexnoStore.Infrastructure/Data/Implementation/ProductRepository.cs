@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,14 +11,19 @@ namespace TexnoStore.Infrastructure.Data.Implementation
 {
     public class ProductRepository : IProductRepository
     {
-        public Task<Product> GetProductByIdAsync(int id)
+        private readonly TexnoStoreContext _context;
+        public ProductRepository(TexnoStoreContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<Product> GetProductByIdAsync(int id)
+        {
+            return await _context.Products.FindAsync(id);
         }
 
-        public Task<IReadOnlyList<Product>> GetProductsAsync()
+        public async Task<IReadOnlyList<Product>> GetProductsAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Products.ToListAsync();
         }
     }
 }
