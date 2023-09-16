@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TexnoStore.Infrastructure.Data;
 
@@ -10,9 +11,11 @@ using TexnoStore.Infrastructure.Data;
 namespace TexnoStore.Infrastructure.Migrations
 {
     [DbContext(typeof(TexnoStoreContext))]
-    partial class TexnoStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20230916162825_newTables")]
+    partial class newTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
