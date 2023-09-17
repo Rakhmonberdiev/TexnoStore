@@ -11,8 +11,8 @@ using TexnoStore.Infrastructure.Data;
 namespace TexnoStore.Infrastructure.Migrations
 {
     [DbContext(typeof(TexnoStoreContext))]
-    [Migration("20230917063947_configuringMig")]
-    partial class configuringMig
+    [Migration("20230917082930_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,6 +73,7 @@ namespace TexnoStore.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -89,6 +90,7 @@ namespace TexnoStore.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
