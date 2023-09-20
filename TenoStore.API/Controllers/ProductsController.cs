@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TenoStore.API.Dtos;
 using TexnoStore.Core.Entities;
@@ -14,12 +15,14 @@ namespace TenoStore.API.Controllers
         private readonly IGenericRepository<Product> productsRepo;
         private readonly IGenericRepository<ProductBrand> productBrandRepo;
         private readonly IGenericRepository<ProductType> productTypeRepo;
+        private readonly IMapper mapper;
 
-        public ProductsController(IGenericRepository<Product> productsRepo, IGenericRepository<ProductBrand> productBrandRepo, IGenericRepository<ProductType> productTypeRepo)
+        public ProductsController(IGenericRepository<Product> productsRepo, IGenericRepository<ProductBrand> productBrandRepo, IGenericRepository<ProductType> productTypeRepo, IMapper mapper)
         {
             this.productsRepo = productsRepo;
             this.productBrandRepo = productBrandRepo;
             this.productTypeRepo = productTypeRepo;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -45,16 +48,7 @@ namespace TenoStore.API.Controllers
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
             var product = await productsRepo.GetEntityWithSpec(spec);
-            return new ProductToReturnDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                PictureUrl = product.PictureUrl,
-                Price = product.Price,
-                ProductBrand = product.ProductBrand.Name,
-                ProductType = product.ProductType.Name
-            };
+            return mapper.Map<Product, ProductToReturnDto>(product);
 
         }
 
