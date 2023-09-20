@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TexnoStore.Core.Entities;
 using TexnoStore.Core.Interfaces;
+using TexnoStore.Core.Specifications;
 
 namespace TenoStore.API.Controllers
 {
@@ -23,7 +24,8 @@ namespace TenoStore.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Product>>> GetProducts()
         {
-            var products = await productsRepo.ListAllAsync();
+            var spec = new ProductsWithTypesAndBrandsSpecification();
+            var products = await productsRepo.ListAsync(spec);
             return Ok(products);
         }
 
@@ -31,7 +33,8 @@ namespace TenoStore.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            return await productsRepo.GetByIdAsync(id);
+            var spec = new ProductsWithTypesAndBrandsSpecification(id);
+            return await productsRepo.GetEntityWithSpec(spec);
         }
 
         [HttpGet("brands")]
