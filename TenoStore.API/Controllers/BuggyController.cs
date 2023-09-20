@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TenoStore.API.Errors;
 using TexnoStore.Infrastructure.Data;
 
 namespace TenoStore.API.Controllers
@@ -19,7 +20,7 @@ namespace TenoStore.API.Controllers
             var thing = context.Products.Find(42);
             if (thing == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse(404));
             }
             return Ok();
         }
@@ -35,7 +36,7 @@ namespace TenoStore.API.Controllers
         [HttpGet("badrequest")]
         public ActionResult GetBadRequest()
         {
-            return BadRequest();
+            return BadRequest(new ApiResponse(400));
         }
         [HttpGet("badrequest/{id}")]
         public ActionResult GetNotFoundRequest(int id)
