@@ -5,7 +5,8 @@ using TenoStore.API.Errors;
 namespace TenoStore.API.Controllers
 {
     [Route("errors/{code}")]
-    public class ErrorController : ControllerBase
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public class ErrorController : BaseApiController
     {
         public IActionResult Error(int code)
         {
