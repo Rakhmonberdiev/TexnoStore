@@ -1,18 +1,24 @@
-﻿using TexnoStore.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using TexnoStore.Core.Entities;
 using TexnoStore.Core.Interfaces;
 
 namespace TexnoStore.Infrastructure.Data.Implementation
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
-        public Task<T> GetByIdAsync(int id)
+        private readonly TexnoStoreContext _context;
+        public GenericRepository(TexnoStoreContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<T> GetByIdAsync(int id)
+        {
+           return await _context.Set<T>().FindAsync(id);
         }
 
-        public Task<IReadOnlyList<T>> ListAllAsync()
+        public async Task<IReadOnlyList<T>> ListAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Set<T>().ToListAsync();
         }
     }
 }
