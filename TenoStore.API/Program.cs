@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using TenoStore.API.Helpers;
+using TenoStore.API.Middleware;
 using TexnoStore.Core.Interfaces;
 using TexnoStore.Infrastructure.Data;
 using TexnoStore.Infrastructure.Data.Implementation;
@@ -21,7 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
