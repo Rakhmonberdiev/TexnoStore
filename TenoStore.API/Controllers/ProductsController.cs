@@ -8,9 +8,7 @@ using TexnoStore.Core.Specifications;
 
 namespace TenoStore.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> productsRepo;
         private readonly IGenericRepository<ProductBrand> productBrandRepo;
