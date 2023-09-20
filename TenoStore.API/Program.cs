@@ -1,26 +1,58 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TenoStore.API.Extensions;
+using System;
+using TenoStore.API.Errors;
+using TenoStore.API.Helpers;
 using TenoStore.API.Middleware;
+using TexnoStore.Core.Interfaces;
 using TexnoStore.Infrastructure.Data;
+using TexnoStore.Infrastructure.Data.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddSwaggerDoc();
-
-
+builder.Services.AddDbContext<TexnoStoreContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddControllers();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = actionContext =>
+    {
+        var errors = actionContext.ModelState
+        .Where(e => e.Value.Errors.Count > 0)
+        .SelectMany(x => x.Value.Errors)
+        .Select(x => x.ErrorMessage).ToArray();
+
+        var errorResponse = new ApiValidationErrorResponse
+        {
+            Errors = errors,
+
+        };
+        return new BadRequestObjectResult(errorResponse);
+    };
+});
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseSwaggerDoc();
-app.UseStatusCodePagesWithReExecute("/errors/{0}");
-
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthorization();
-
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
 app.MapControllers();
 
 using var scope = app.Services.CreateScope();

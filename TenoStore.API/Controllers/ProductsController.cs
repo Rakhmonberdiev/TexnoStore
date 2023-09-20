@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TenoStore.API.Dtos;
-using TenoStore.API.Errors;
 using TexnoStore.Core.Entities;
 using TexnoStore.Core.Interfaces;
 using TexnoStore.Core.Specifications;
@@ -35,16 +34,10 @@ namespace TenoStore.API.Controllers
 
 
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
             var product = await productsRepo.GetEntityWithSpec(spec);
-            if(product == null)
-            {
-                return NotFound(new ApiResponse(404));
-            }
             return mapper.Map<Product, ProductToReturnDto>(product);
 
         }
