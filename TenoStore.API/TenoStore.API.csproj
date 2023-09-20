@@ -26,4 +26,8 @@
     <None Include="wwwroot\Images\Product\jk-placeholder-image.jpg" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middleware\" />
+  </ItemGroup>
+
 </Project>

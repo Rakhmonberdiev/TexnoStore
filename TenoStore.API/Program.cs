@@ -32,7 +32,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthorization();
-
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
 app.MapControllers();
 
 using var scope = app.Services.CreateScope();

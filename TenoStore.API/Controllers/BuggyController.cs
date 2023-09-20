@@ -5,8 +5,6 @@ using TexnoStore.Infrastructure.Data;
 
 namespace TenoStore.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class BuggyController : BaseApiController
     {
         TexnoStoreContext context;
