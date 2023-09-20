@@ -22,4 +22,8 @@
     <ProjectReference Include="..\TexnoStore.Infrastructure\TexnoStore.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Images\Product\jk-placeholder-image.jpg" />
+  </ItemGroup>
+
 </Project>
