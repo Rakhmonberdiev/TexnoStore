@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TenoStore.API.Dtos;
 using TenoStore.API.Errors;
+using TenoStore.API.Helpers;
 using TexnoStore.Core.Entities;
 using TexnoStore.Core.Interfaces;
 using TexnoStore.Core.Specifications;
@@ -25,12 +26,16 @@ namespace TenoStore.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts(string sort,int? brandId,int? typeId)
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams productParams)
         {
-            var spec = new ProductsWithTypesAndBrandsSpecification(sort,brandId,typeId);
+            var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+            var countSpec  = new ProductWithFiltersForCountSpec(productParams);
+            var totalItems = await productsRepo.CountAsync(countSpec);
+
             var products = await productsRepo.ListAsync(spec);
-            var mapRet = mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
-            return Ok(mapRet); 
+             
+            var data = mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+            return Ok(new Pagination<ProductToReturnDto>(productParams.PageSize,productParams.PageIndex,totalItems,data)); 
         }
 
 
