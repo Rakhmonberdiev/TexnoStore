@@ -21,7 +21,7 @@ namespace TenoStore.API.Extensions
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IBasketRepository, BasketRepository>();
-            services.AddSingleton<ConnectionMultiplexer>(c => {
+            services.AddSingleton<IConnectionMultiplexer>(c => {
                 var configuration = ConfigurationOptions.Parse(config.GetConnectionString("Redis"), true);
                 return ConnectionMultiplexer.Connect(configuration);
             });
