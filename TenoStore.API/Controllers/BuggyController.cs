@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TenoStore.API.Errors;
 using TexnoStore.Infrastructure.Data;
 
@@ -26,8 +27,10 @@ namespace TenoStore.API.Controllers
         [HttpGet("servererror")]
         public ActionResult GetServerError()
         {
-            var thing = context.Products.Find(42);
+            var thing = context.Products.Find(-1);
+
             var thingToReturn = thing.ToString();
+
             return Ok();
         }
 
