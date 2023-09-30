@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TexnoStore.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TexnoStore.Infrastructure.Data;
 namespace TexnoStore.Infrastructure.Migrations
 {
     [DbContext(typeof(TexnoStoreContext))]
-    partial class TexnoStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20230930082424_updatedTheEntityAppUser")]
+    partial class updatedTheEntityAppUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,7 +193,7 @@ namespace TexnoStore.Infrastructure.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Addresss", (string)null);
+                    b.ToTable("Addresss");
                 });
 
             modelBuilder.Entity("TexnoStore.Core.Entities.AppUser", b =>
@@ -298,7 +301,7 @@ namespace TexnoStore.Infrastructure.Migrations
 
                     b.HasIndex("ProductTypeId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("TexnoStore.Core.Entities.ProductBrand", b =>
@@ -314,7 +317,7 @@ namespace TexnoStore.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductBrands", (string)null);
+                    b.ToTable("ProductBrands");
                 });
 
             modelBuilder.Entity("TexnoStore.Core.Entities.ProductType", b =>
@@ -330,7 +333,7 @@ namespace TexnoStore.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductTypes", (string)null);
+                    b.ToTable("ProductTypes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

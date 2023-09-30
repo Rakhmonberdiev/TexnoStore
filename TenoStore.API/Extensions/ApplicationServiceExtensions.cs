@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using TenoStore.API.Errors;
 using TenoStore.API.Helpers;
+using TexnoStore.Core.Entities;
 using TexnoStore.Core.Interfaces;
 using TexnoStore.Infrastructure.Data;
 using TexnoStore.Infrastructure.Data.Implementation;
@@ -17,6 +19,13 @@ namespace TenoStore.API.Extensions
             {
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             });
+            var builder = services.AddIdentityCore<AppUser>();
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+            builder.AddEntityFrameworkStores<TexnoStoreContext>();
+            builder.AddSignInManager<SignInManager<AppUser>>();
+            builder.AddRoleManager<RoleManager<IdentityRole>>();
+
+            services.AddAuthentication();
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TenoStore.API.Extensions;
 using TenoStore.API.Middleware;
+using TexnoStore.Core.Entities;
 using TexnoStore.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,13 +35,17 @@ app.MapControllers();
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 
-var context = services.GetRequiredService<TexnoStoreContext>();
+
 var logger = services.GetRequiredService<ILogger<Program>>();
+
 try
 {
+    var context = services.GetRequiredService<TexnoStoreContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     await context.Database.MigrateAsync();
     await TexnoStoreContextSeed.SeedAsync(context);
-
+    await SeedIdentityUser.SeedUsersAsync(userManager,roleManager);
 }
 catch (Exception ex)
 {
