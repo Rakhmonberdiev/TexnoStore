@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TenoStore.API.Dtos;
 using TenoStore.API.Errors;
 using TexnoStore.Core.Entities;
+using TexnoStore.Core.Interfaces;
 
 namespace TenoStore.API.Controllers
 {
@@ -12,10 +13,12 @@ namespace TenoStore.API.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ITokenService tokenService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
         {
             _signInManager = signInManager;
+            this.tokenService = tokenService;
             _userManager = userManager;
         }
         [HttpPost("login")]
@@ -32,7 +35,7 @@ namespace TenoStore.API.Controllers
             return new UserDto
             {
                 Email = user.Email,
-                Token = "token",
+                Token = tokenService.CreateToken(user),
                 DisplayName = user.DisplayName
             };
         }
@@ -51,7 +54,7 @@ namespace TenoStore.API.Controllers
             return new UserDto
             {
                 DisplayName = user.DisplayName,
-                Token = "token",
+                Token = tokenService.CreateToken(user),
                 Email = user.Email,
             };
 

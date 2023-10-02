@@ -11,6 +11,7 @@ using TexnoStore.Core.Entities;
 using TexnoStore.Core.Interfaces;
 using TexnoStore.Infrastructure.Data;
 using TexnoStore.Infrastructure.Data.Implementation;
+using TexnoStore.Infrastructure.Services;
 
 namespace TenoStore.API.Extensions
 {
@@ -29,17 +30,21 @@ namespace TenoStore.API.Extensions
             builder.AddRoleManager<RoleManager<IdentityRole>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Token:Key"])),
-                        ValidIssuer = config["Token:Issuer"],
-                        ValidateIssuer = true
-                    };
-                });
+                            .AddJwtBearer(options =>
+                            {
+                                options.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuerSigningKey = true,
+                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Token:Key"])),
+                                    ValidIssuer = config["Token:Issuer"],
+                                    ValidateIssuer = true,
+                                    ValidateAudience = false
+                                };
+                            });
 
+
+            services.AddAuthorization();
+            services.AddScoped<ITokenService,  TokenService>();
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
