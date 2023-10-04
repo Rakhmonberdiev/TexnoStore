@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TenoStore.API.Dtos;
 using TenoStore.API.Errors;
+using TenoStore.API.Extensions;
 using TexnoStore.Core.Entities;
 using TexnoStore.Core.Interfaces;
 
@@ -65,8 +66,8 @@ namespace TenoStore.API.Controllers
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
-            var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type==ClaimTypes.Email)?.Value;
-            var user = await _userManager.FindByEmailAsync(email);
+            
+            var user = await _userManager.FindByEmailFromClaimsPrinciple(HttpContext.User);
             return new UserDto
             {
                 DisplayName = user.DisplayName,
@@ -83,8 +84,8 @@ namespace TenoStore.API.Controllers
         [HttpGet("address")]
         public async Task<ActionResult<Address>> GetUserAddres()
         {
-            var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type == ClaimTypes.Email)?.Value;
-            var user = await _userManager.FindByEmailAsync(email);
+            
+            var user = await _userManager.FindByUserByClaimsPrincipleWithAddressAsync(HttpContext.User);
             return user.Address;
         }
     }
