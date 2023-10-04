@@ -17,11 +17,13 @@ namespace TenoStore.API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService tokenService;
+        private readonly IMapper mapper;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService,IMapper mapper)
         {
             _signInManager = signInManager;
             this.tokenService = tokenService;
+            this.mapper = mapper;
             _userManager = userManager;
         }
         [HttpPost("login")]
@@ -82,11 +84,12 @@ namespace TenoStore.API.Controllers
             return await _userManager.FindByEmailAsync(email) != null;
         }
         [HttpGet("address")]
-        public async Task<ActionResult<Address>> GetUserAddres()
+        public async Task<ActionResult<AddressDto>> GetUserAddres()
         {
             
             var user = await _userManager.FindByUserByClaimsPrincipleWithAddressAsync(HttpContext.User);
-            return user.Address;
+            var rs = mapper.Map<Address, AddressDto>(user.Address);
+            return rs;
         }
     }
 }
