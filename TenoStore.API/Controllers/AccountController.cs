@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TenoStore.API.Dtos;
 using TenoStore.API.Errors;
 using TexnoStore.Core.Entities;
@@ -58,6 +60,32 @@ namespace TenoStore.API.Controllers
                 Email = user.Email,
             };
 
+        }
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type==ClaimTypes.Email)?.Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            return new UserDto
+            {
+                DisplayName = user.DisplayName,
+                Token = tokenService.CreateToken(user),
+                Email = user.Email,
+            };
+        }
+        [Authorize]
+        [HttpGet("emailexists")]
+        public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery] string email)
+        {
+            return await _userManager.FindByEmailAsync(email) != null;
+        }
+        [HttpGet("address")]
+        public async Task<ActionResult<Address>> GetUserAddres()
+        {
+            var email = HttpContext.User?.Claims?.FirstOrDefault(x=>x.Type == ClaimTypes.Email)?.Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            return user.Address;
         }
     }
 }
