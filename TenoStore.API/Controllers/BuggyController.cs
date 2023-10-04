@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TenoStore.API.Errors;
@@ -12,6 +13,12 @@ namespace TenoStore.API.Controllers
         public BuggyController(TexnoStoreContext context)
         {
             this.context = context;  
+        }
+        [HttpGet("testAuth")]
+        [Authorize]
+        public ActionResult<string> GetText()
+        {
+            return "testAuth";
         }
         [HttpGet("notfound")]
         public ActionResult GetNotFoundRequest() 

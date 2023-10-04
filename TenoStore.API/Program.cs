@@ -28,8 +28,9 @@ app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseAuthorization();
+
 app.UseAuthentication();
+app.UseAuthorization();
 app.UseCors("CorsPolicy");
 app.MapControllers();
 
